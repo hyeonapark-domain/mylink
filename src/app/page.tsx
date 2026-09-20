@@ -170,8 +170,8 @@ export default function NeobrutalismProfilePage() {
               <div className="relative group shrink-0">
                 <div className="w-36 h-36 sm:w-44 sm:h-44 relative rounded-2xl border-4 border-black shadow-[6px_6px_0px_0px_#000] overflow-hidden bg-white transition-transform duration-200 group-hover:-rotate-2">
                   <Image
-                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80"
-                    alt="박현아 프로필"
+                    src="/avatar.jpg"
+                    alt="박현아 애플 미모지 프로필"
                     fill
                     sizes="(max-width: 640px) 144px, 176px"
                     className="object-cover"
