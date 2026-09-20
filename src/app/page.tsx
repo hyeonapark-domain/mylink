@@ -11,7 +11,11 @@ import {
   Layers,
   Calendar,
   Send,
-  Heart,
+  Zap,
+  Star,
+  CheckSquare,
+  Cpu,
+  Flame,
 } from "lucide-react";
 
 // GitHub SVG Component
@@ -36,418 +40,443 @@ function LinkedinIcon({ className = "w-5 h-5" }: { className?: string }) {
   );
 }
 
-export default function ProfilePage() {
+export default function NeobrutalismProfilePage() {
   const projects = [
     {
       id: 1,
-      title: "AI 에이전트 관리 대시보드",
-      category: "Full-Stack / AI Integration",
+      title: "AI 에이전트 대시보드",
+      category: "AI & WORKFLOW",
       description:
-        "실시간 AI 데이터 분석 및 인터랙티브 워크플로우 자동화를 지원하는 반응형 웹 대시보드입니다.",
+        "실시간 AI 데이터 분석과 오토메이션 워크플로우를 제공하는 인터랙티브 대시보드 플랫폼입니다.",
       image:
         "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
-      tags: ["Next.js", "TypeScript", "Tailwind CSS", "OpenAI API"],
+      tags: ["Next.js", "TypeScript", "Tailwind", "OpenAI"],
+      badgeBg: "bg-amber-300",
       demoUrl: "#",
       githubUrl: "#",
     },
     {
       id: 2,
-      title: "NexShop 이커머스 플랫폼",
-      category: "Web Application",
+      title: "NexShop 이커머스",
+      category: "FULL-STACK SHOP",
       description:
-        "초고속 SSR 페이징과 결제 시스템, 유연한 큐레이션을 제공하는 반응형 쇼핑몰 서비스입니다.",
+        "초고속 SSR 페이징과 결제 시스템, 유연한 큐레이션을 탑재한 반응형 쇼핑몰 서비스입니다.",
       image:
         "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
-      tags: ["React", "Next.js", "Zustand", "Stripe API"],
+      tags: ["React", "Next.js", "Zustand", "Stripe"],
+      badgeBg: "bg-pink-400",
       demoUrl: "#",
       githubUrl: "#",
     },
     {
       id: 3,
-      title: "DesignFlow 디자인 협업 툴",
-      category: "SaaS Platform",
+      title: "DesignFlow 협업 툴",
+      category: "SAAS PLATFORM",
       description:
-        "실시간 캔버스 공유와 프로토타이핑 피드백을 주고받는 웹 기반 디자이너/개발자 협업 플랫폼입니다.",
+        "실시간 캔버스 공유와 프로토타이핑 피드백을 실시간으로 주고받는 웹 기반 디자이너/개발자 협업 툴입니다.",
       image:
         "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80",
-      tags: ["TypeScript", "Canvas API", "WebSockets", "Node.js"],
+      tags: ["TypeScript", "Canvas", "WebSockets", "Node.js"],
+      badgeBg: "bg-cyan-300",
       demoUrl: "#",
       githubUrl: "#",
     },
     {
       id: 4,
-      title: "PlanCraft 스마트 목표 플래너",
-      category: "Productivity",
+      title: "PlanCraft 목표 플래너",
+      category: "PRODUCTIVITY",
       description:
-        "개인별 목표 달성률 추적 및 습관 형성 알림 기능을 갖춘 인터랙티브 생산성 애플리케이션입니다.",
+        "개인별 목표 달성률 추적 및 습관 형성 알림 기능을 제공하는 터치형 생산성 앱입니다.",
       image:
         "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=800&q=80",
-      tags: ["React", "Tailwind CSS", "PostgreSQL", "Prisma"],
+      tags: ["React", "Tailwind", "PostgreSQL", "Prisma"],
+      badgeBg: "bg-lime-300",
       demoUrl: "#",
       githubUrl: "#",
     },
   ];
 
   const skills = [
-    { name: "React / Next.js", level: "95%", icon: Code2, color: "text-blue-500 bg-blue-50 dark:bg-blue-950/40" },
-    { name: "TypeScript", level: "90%", icon: Terminal, color: "text-sky-500 bg-sky-50 dark:bg-sky-950/40" },
-    { name: "Tailwind CSS", level: "95%", icon: Layers, color: "text-teal-500 bg-teal-50 dark:bg-teal-950/40" },
-    { name: "Node.js / Express", level: "85%", icon: Globe, color: "text-emerald-500 bg-emerald-50 dark:bg-emerald-950/40" },
+    { name: "React / Next.js", level: "95%", icon: Code2, bg: "bg-amber-300" },
+    { name: "TypeScript", level: "90%", icon: Terminal, bg: "bg-cyan-300" },
+    { name: "Tailwind CSS", level: "95%", icon: Layers, bg: "bg-pink-400" },
+    { name: "Node.js / Express", level: "85%", icon: Globe, bg: "bg-lime-300" },
   ];
 
   const stats = [
-    { label: "프로젝트 완료", value: "24+" },
-    { label: "총 개발 경력", value: "4년차" },
-    { label: "클라이언트 만족도", value: "99.8%" },
-    { label: "GitHub 커밋", value: "1,800+" },
+    { label: "PROJECTS DONE", value: "24+", bg: "bg-amber-300", icon: CheckSquare },
+    { label: "EXPERIENCE", value: "4 YRS", bg: "bg-cyan-300", icon: Zap },
+    { label: "SATISFACTION", value: "99.8%", bg: "bg-pink-400", icon: Star },
+    { label: "COMMITS", value: "1,800+", bg: "bg-lime-300", icon: Flame },
   ];
 
   const timeline = [
     {
-      period: "2024 - 현재",
+      period: "2024 - PRESENT",
       role: "Lead Frontend Engineer",
       company: "TechNova Inc.",
       description: "핵심 웹 서비스 프론트엔드 아키텍처 설계 및 웹 성능(LCP, CLS) 40% 개선 주도.",
+      bg: "bg-amber-300",
     },
     {
       period: "2022 - 2024",
       role: "Full-Stack Developer",
       company: "Startup Lab",
       description: "React/Next.js 기반의 SaaS 서비스 구축 및 사용자 맞춤형 대시보드 개발.",
+      bg: "bg-cyan-300",
     },
     {
       period: "2021 - 2022",
       role: "Web Frontend Developer",
       company: "Creative Interactive",
       description: "반응형 웹 사이트 15+ 구축 및 UI/UX 디자인 시스템 컴포넌트 라이브러리 제작.",
+      bg: "bg-pink-400",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans selection:bg-indigo-500 selection:text-white transition-colors duration-300">
-      {/* 1. 커버 배너 히어로 */}
-      <div className="relative h-64 sm:h-80 md:h-96 w-full overflow-hidden">
-        <Image
-          src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1600&q=80"
-          alt="Profile Cover"
-          fill
-          priority
-          className="object-cover object-center filter brightness-90 hover:scale-105 transition-transform duration-1000 ease-out"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/30 to-transparent" />
-        
-        {/* 히어로 상단 구석 장식 요소 */}
-        <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-white/20 dark:bg-slate-900/40 text-white backdrop-blur-md border border-white/20">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span>Available for projects</span>
-          </span>
+    <div className="min-h-screen bg-[#fffdf5] text-black font-sans selection:bg-black selection:text-amber-300 pb-20">
+      {/* 1. 상단 마키 롤링 배너 (Neobrutalism Strips) */}
+      <div className="bg-amber-300 border-b-4 border-black overflow-hidden py-2.5 whitespace-nowrap font-black uppercase text-xs sm:text-sm tracking-widest select-none">
+        <div className="animate-marquee flex gap-8">
+          <span>⚡ HYEONAH PARK // FULL-STACK DEVELOPER // CREATIVE UI/UX // NEXT.JS & REACT // OPEN FOR PROJECTS ⚡</span>
+          <span>⚡ HYEONAH PARK // FULL-STACK DEVELOPER // CREATIVE UI/UX // NEXT.JS & REACT // OPEN FOR PROJECTS ⚡</span>
+          <span>⚡ HYEONAH PARK // FULL-STACK DEVELOPER // CREATIVE UI/UX // NEXT.JS & REACT // OPEN FOR PROJECTS ⚡</span>
         </div>
       </div>
 
       {/* 메인 컨테이너 */}
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24 sm:-mt-32 relative z-10 pb-16">
-        {/* 2. 프로필 카드 헤더 */}
-        <div className="bg-white dark:bg-slate-900/90 rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-200/80 dark:border-slate-800 backdrop-blur-xl">
-          <div className="flex flex-col sm:flex-row items-center sm:items-end justify-between gap-6">
-            
-            {/* 아바타 & 기본 정보 */}
-            <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5 text-center sm:text-left">
-              {/* 프로필 이미지 (아바타) */}
-              <div className="relative group">
-                <div className="w-32 h-32 sm:w-36 sm:h-36 relative rounded-2xl overflow-hidden ring-4 ring-white dark:ring-slate-900 shadow-2xl transition-transform duration-300 group-hover:scale-105">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 space-y-12">
+        {/* 2. 메인 히어로 카운터 레트로 윈도우 (Neo Hero Card) */}
+        <div className="neo-box-static rounded-2xl overflow-hidden">
+          {/* 레트로 윈도우 헤더 바 */}
+          <div className="bg-black text-white px-4 py-2.5 font-mono text-xs font-bold flex justify-between items-center border-b-3 border-black">
+            <span className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-red-500 border border-black inline-block" />
+              <span className="w-3 h-3 rounded-full bg-yellow-400 border border-black inline-block" />
+              <span className="w-3 h-3 rounded-full bg-green-500 border border-black inline-block" />
+              <span className="ml-2">C:\HYEONAH_PARK_PROFILE_V2.EXE</span>
+            </span>
+            <span className="hidden sm:inline-block font-bold bg-amber-300 text-black px-2 py-0.5 rounded text-[10px]">
+              ONLINE 🟢
+            </span>
+          </div>
+
+          {/* 레트로 히어로 카운터 바디 */}
+          <div className="p-6 sm:p-10 bg-amber-300">
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+              
+              {/* 아바타 이미지 & 3D 테두리 */}
+              <div className="relative group shrink-0">
+                <div className="w-36 h-36 sm:w-44 sm:h-44 relative rounded-2xl border-4 border-black shadow-[6px_6px_0px_0px_#000] overflow-hidden bg-white transition-transform duration-200 group-hover:-rotate-2">
                   <Image
                     src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80"
                     alt="박현아 프로필"
                     fill
-                    sizes="(max-width: 640px) 128px, 144px"
+                    sizes="(max-width: 640px) 144px, 176px"
                     className="object-cover"
                     priority
                   />
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-900 shadow-md flex items-center justify-center text-white text-[10px]" title="온라인 상태">
-                  ✓
+                {/* 팝 배지 스티커 */}
+                <div className="absolute -bottom-3 -right-3 neo-badge bg-lime-300 text-black px-2.5 py-1 text-xs">
+                  DEV ⚡
                 </div>
               </div>
 
-              {/* 이름 및 타이틀 */}
-              <div className="mt-2 sm:mt-0">
-                <div className="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
-                  <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+              {/* 자기소개 & 볼드 텍스트 */}
+              <div className="flex-1 text-center md:text-left space-y-4">
+                {/* 스티커 태그 그룹 */}
+                <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
+                  <span className="neo-badge bg-lime-300 text-black">
+                    🟢 AVAILABLE FOR HIRE
+                  </span>
+                  <span className="neo-badge bg-cyan-300 text-black">
+                    📍 SEOUL, KOREA
+                  </span>
+                  <span className="neo-badge bg-pink-400 text-black">
+                    ⚡ 4+ YRS EXP
+                  </span>
+                </div>
+
+                {/* 메인 타이틀 */}
+                <div>
+                  <h1 className="text-3xl sm:text-5xl font-black text-black tracking-tight uppercase leading-none">
                     박현아
                   </h1>
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-800/60">
-                    Full-Stack Engineer
-                  </span>
+                  <div className="mt-2 inline-block bg-black text-amber-300 px-3 py-1 font-mono font-bold text-xs sm:text-sm rounded border border-black shadow-[2px_2px_0px_0px_#000]">
+                    FULL-STACK DEVELOPER & UI/UX ENTHUSIAST
+                  </div>
                 </div>
-                <p className="text-slate-500 dark:text-slate-400 font-medium text-sm sm:text-base mt-1 flex items-center justify-center sm:justify-start gap-1.5">
-                  <Sparkles className="w-4 h-4 text-amber-500" />
-                  사용자 경험과 깔끔한 코드를 만드는 개발자
+
+                {/* 인트로 바이오 */}
+                <p className="font-bold text-slate-900 text-sm sm:text-base leading-relaxed break-keep bg-white p-4 rounded-xl border-3 border-black shadow-[4px_4px_0px_0px_#000]">
+                  👋 안녕하세요! 사용자 경험과 오차 없는 정교한 코드를 설계하는 개발자 박현아입니다. React, Next.js, TypeScript 기반의 팝하고 감각적인 웹 애플리케이션 구축을 즐깁니다.
                 </p>
-                <div className="flex items-center justify-center sm:justify-start gap-4 text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-3 flex-wrap">
-                  <span className="flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 text-slate-400" /> 서울, 대한민국
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Briefcase className="w-3.5 h-3.5 text-slate-400" /> 프리랜서 / 정규직 가능
-                  </span>
+
+                {/* 액션 버튼 바 */}
+                <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
+                  <a
+                    href="mailto:hyeonah.park@example.com"
+                    className="neo-btn bg-pink-400 hover:bg-pink-300 text-black px-5 py-2.5 rounded-xl text-sm font-black"
+                  >
+                    <Mail className="w-4 h-4 mr-2" />
+                    EMAIL ME
+                  </a>
+                  <a
+                    href="#projects"
+                    className="neo-btn bg-lime-300 hover:bg-lime-200 text-black px-5 py-2.5 rounded-xl text-sm font-black"
+                  >
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    PROJECTS
+                  </a>
+                  <a
+                    href="https://github.com"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="neo-btn bg-white hover:bg-slate-100 text-black p-2.5 rounded-xl"
+                    title="GitHub"
+                  >
+                    <GithubIcon className="w-5 h-5" />
+                  </a>
+                  <a
+                    href="https://linkedin.com"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="neo-btn bg-white hover:bg-slate-100 text-black p-2.5 rounded-xl"
+                    title="LinkedIn"
+                  >
+                    <LinkedinIcon className="w-5 h-5" />
+                  </a>
                 </div>
               </div>
-            </div>
 
-            {/* 액션 버튼 */}
-            <div className="flex items-center gap-2.5 w-full sm:w-auto justify-center">
-              <a
-                href="mailto:hyeonah.park@example.com"
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
-              >
-                <Mail className="w-4 h-4" />
-                이메일 문의
-              </a>
-              <a
-                href="#projects"
-                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-medium text-sm transition-all duration-200"
-              >
-                포트폴리오
-              </a>
-            </div>
-
-          </div>
-
-          {/* 소개 문구 */}
-          <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800/80">
-            <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-sm sm:text-base break-keep">
-              안녕하세요! 4년 차 웹 개발자 박현아입니다. React, Next.js, TypeScript 기반의 확장성 있는 웹 애플리케이션 구축을 즐깁니다. Intuitive한 UI/UX와 오차 없는 로직 설계를 바탕으로 사용자에게 최상의 가치를 전달하는 데 몰입합니다.
-            </p>
-
-            {/* 소셜 매체 아이콘 링크 */}
-            <div className="flex items-center gap-3 mt-4 pt-2">
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noreferrer"
-                className="p-2 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                title="GitHub"
-              >
-                <GithubIcon className="w-5 h-5" />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noreferrer"
-                className="p-2 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                title="LinkedIn"
-              >
-                <LinkedinIcon className="w-5 h-5" />
-              </a>
-              <a
-                href="https://velog.io"
-                target="_blank"
-                rel="noreferrer"
-                className="p-2 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                title="Blog"
-              >
-                <Globe className="w-5 h-5" />
-              </a>
             </div>
           </div>
         </div>
 
-        {/* 3. 스탯 카운터 그리드 */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-8">
-          {stats.map((stat, idx) => (
-            <div
-              key={idx}
-              className="bg-white dark:bg-slate-900/80 p-5 rounded-2xl border border-slate-200/70 dark:border-slate-800 text-center shadow-sm hover:shadow-md transition-shadow"
-            >
-              <div className="text-2xl sm:text-3xl font-extrabold text-indigo-600 dark:text-indigo-400 tracking-tight">
-                {stat.value}
+        {/* 3. 스탯 그리드 (Neobrutalism Color Cards) */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {stats.map((stat, idx) => {
+            const IconComponent = stat.icon;
+            return (
+              <div
+                key={idx}
+                className={`neo-box-static ${stat.bg} p-5 rounded-2xl text-center hover:-rotate-2 transition-transform duration-200`}
+              >
+                <div className="inline-flex p-2 rounded-xl bg-black text-white mb-2 shadow-[2px_2px_0px_0px_#fff]">
+                  <IconComponent className="w-5 h-5" />
+                </div>
+                <div className="text-3xl sm:text-4xl font-black text-black tracking-tight">
+                  {stat.value}
+                </div>
+                <div className="text-xs font-black text-black uppercase tracking-wider mt-1">
+                  {stat.label}
+                </div>
               </div>
-              <div className="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 mt-1">
-                {stat.label}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        {/* 4. 주요 기술 스택 */}
-        <section className="mb-12">
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-            <Code2 className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
-            기술 스택 & 핵심 역량
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {skills.map((skill, idx) => {
-              const IconComponent = skill.icon;
-              return (
-                <div
-                  key={idx}
-                  className="bg-white dark:bg-slate-900/80 p-5 rounded-2xl border border-slate-200/70 dark:border-slate-800 flex items-center gap-4 shadow-sm hover:border-indigo-300 dark:hover:border-indigo-700 transition-all"
-                >
-                  <div className={`p-3 rounded-xl ${skill.color}`}>
-                    <IconComponent className="w-6 h-6" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex justify-between items-center mb-1.5">
-                      <span className="font-semibold text-slate-800 dark:text-slate-200 text-sm sm:text-base">
-                        {skill.name}
-                      </span>
-                      <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">
-                        {skill.level}
-                      </span>
+        {/* 4. 기술 스택 섹션 (Skills Matrix Window) */}
+        <section className="neo-box-static rounded-2xl bg-white overflow-hidden">
+          <div className="bg-black text-white px-4 py-2.5 font-mono text-xs font-bold flex justify-between items-center border-b-3 border-black">
+            <span className="flex items-center gap-2">
+              <Cpu className="w-4 h-4 text-cyan-300" />
+              <span>SKILLS_MATRIX.CONFIG</span>
+            </span>
+            <span className="neo-badge bg-cyan-300 text-black py-0.5 text-[10px]">VER 4.2</span>
+          </div>
+
+          <div className="p-6 sm:p-8 space-y-6">
+            <h2 className="text-xl sm:text-2xl font-black text-black uppercase tracking-tight flex items-center gap-2">
+              <Code2 className="w-6 h-6 text-black" />
+              TECH STACK & CORE CAPABILITIES
+            </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {skills.map((skill, idx) => {
+                const IconComponent = skill.icon;
+                return (
+                  <div
+                    key={idx}
+                    className={`neo-box-static ${skill.bg} p-4 rounded-xl flex items-center gap-4`}
+                  >
+                    <div className="p-3 bg-black text-white rounded-xl shadow-[2px_2px_0px_0px_#fff]">
+                      <IconComponent className="w-6 h-6" />
                     </div>
-                    <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
-                      <div
-                        className="bg-indigo-600 dark:bg-indigo-500 h-2 rounded-full transition-all duration-1000 ease-out"
-                        style={{ width: skill.level }}
-                      />
+                    <div className="flex-1">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="font-black text-black text-sm sm:text-base uppercase">
+                          {skill.name}
+                        </span>
+                        <span className="neo-badge bg-black text-white text-[10px]">
+                          {skill.level}
+                        </span>
+                      </div>
+                      <div className="w-full bg-white border-2 border-black rounded-full h-3 overflow-hidden p-0.5 shadow-[2px_2px_0px_0px_#000]">
+                        <div
+                          className="bg-black h-full rounded-full transition-all duration-1000"
+                          style={{ width: skill.level }}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </section>
 
-        {/* 5. 주요 프로젝트 갤러리 */}
-        <section id="projects" className="mb-12 scroll-mt-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-2">
+        {/* 5. 대표 프로젝트 갤러리 (Retro Windows Grid) */}
+        <section id="projects" className="space-y-6 scroll-mt-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b-4 border-black pb-3">
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <Sparkles className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
-                대표 프로젝트
+              <div className="neo-badge bg-pink-400 text-black mb-1">
+                PORTFOLIO SHOWCASE
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-black text-black uppercase tracking-tight flex items-center gap-2">
+                <Sparkles className="w-7 h-7 text-black" />
+                FEATURED_PROJECTS.LOG
               </h2>
-              <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
-                직접 기획하고 개발한 주요 프로젝트 갤러리입니다.
-              </p>
             </div>
+            <span className="text-xs font-extrabold text-black font-mono">
+              [TOTAL 4 ITEMS]
+            </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {projects.map((project) => (
               <div
                 key={project.id}
-                className="group bg-white dark:bg-slate-900/80 rounded-2xl border border-slate-200/70 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col hover:-translate-y-1"
+                className="neo-box rounded-2xl overflow-hidden flex flex-col bg-white"
               >
-                {/* 프로젝트 이미지 썸네일 */}
-                <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+                {/* 창 제목 바 */}
+                <div className="bg-black text-white px-3 py-2 font-mono text-xs font-bold flex justify-between items-center">
+                  <span className="truncate max-w-[200px]">{project.title}.exe</span>
+                  <div className="flex items-center gap-1">
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-300 inline-block" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-pink-400 inline-block" />
+                  </div>
+                </div>
+
+                {/* 썸네일 이미지 */}
+                <div className="relative h-48 sm:h-52 w-full overflow-hidden border-b-3 border-black bg-slate-100">
                   <Image
                     src={project.image}
                     alt={project.title}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="object-cover"
                   />
-                  <div className="absolute top-3 left-3 bg-slate-900/70 backdrop-blur-md text-white text-xs font-semibold px-2.5 py-1 rounded-md">
+                  <div className={`absolute top-3 left-3 neo-badge ${project.badgeBg} text-black font-extrabold`}>
                     {project.category}
                   </div>
                 </div>
 
-                {/* 프로젝트 카드 본문 */}
-                <div className="p-5 flex-1 flex flex-col justify-between">
+                {/* 내용 바디 */}
+                <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                   <div>
-                    <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                    <h3 className="text-lg font-black text-black uppercase">
                       {project.title}
                     </h3>
-                    <p className="text-slate-600 dark:text-slate-400 text-sm mt-2 leading-relaxed break-keep">
+                    <p className="text-slate-900 text-xs sm:text-sm font-bold mt-2 leading-relaxed break-keep">
                       {project.description}
                     </p>
                   </div>
 
-                  <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800/80 flex flex-col gap-3">
-                    {/* 기술 태그 목록 */}
+                  <div className="space-y-3 pt-2">
+                    {/* 태그 목록 */}
                     <div className="flex flex-wrap gap-1.5">
                       {project.tags.map((tag, tIdx) => (
                         <span
                           key={tIdx}
-                          className="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-medium"
+                          className="neo-badge bg-white text-black text-[10px]"
                         >
-                          {tag}
+                          #{tag}
                         </span>
                       ))}
                     </div>
 
-                    {/* 데모 & 코드 링크 */}
-                    <div className="flex items-center gap-3 pt-1">
+                    {/* 액션 버튼 */}
+                    <div className="flex items-center gap-2 pt-2">
                       <a
                         href={project.demoUrl}
-                        className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
+                        className="neo-btn bg-amber-300 text-black px-4 py-1.5 text-xs font-black rounded-lg flex-1"
                       >
-                        라이브 데모 <ExternalLink className="w-3 h-3" />
+                        DEMO <ExternalLink className="w-3.5 h-3.5 ml-1" />
                       </a>
                       <a
                         href={project.githubUrl}
-                        className="inline-flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"
+                        className="neo-btn bg-cyan-300 text-black px-4 py-1.5 text-xs font-black rounded-lg flex-1"
                       >
-                        소스 코드 <GithubIcon className="w-3.5 h-3.5" />
+                        CODE <GithubIcon className="w-3.5 h-3.5 ml-1" />
                       </a>
                     </div>
                   </div>
+                </div>
+
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* 6. 경력 이력 타임라인 (Neobrutalism Timeline) */}
+        <section className="neo-box-static rounded-2xl bg-white p-6 sm:p-8 space-y-6">
+          <div className="border-b-3 border-black pb-3">
+            <h2 className="text-xl sm:text-2xl font-black text-black uppercase tracking-tight flex items-center gap-2">
+              <Calendar className="w-6 h-6 text-black" />
+              WORK_EXPERIENCE.TIMELINE
+            </h2>
+          </div>
+
+          <div className="space-y-6 relative before:absolute before:inset-0 before:left-3.5 before:w-1 before:bg-black">
+            {timeline.map((item, idx) => (
+              <div key={idx} className="relative pl-10">
+                {/* 3D 사각형 노드 */}
+                <div className={`absolute left-1 top-1 w-6 h-6 ${item.bg} border-2 border-black shadow-[2px_2px_0px_0px_#000] flex items-center justify-center font-mono text-xs font-black`} />
+
+                <div className="neo-box p-4 rounded-xl bg-white">
+                  <span className={`neo-badge ${item.bg} text-black text-[10px] mb-2`}>
+                    {item.period}
+                  </span>
+                  <h3 className="text-base sm:text-lg font-black text-black">
+                    {item.role} <span className="font-extrabold text-slate-600">@ {item.company}</span>
+                  </h3>
+                  <p className="text-slate-900 text-xs sm:text-sm font-bold mt-2 leading-relaxed">
+                    {item.description}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* 6. 경력 및 이력 타임라인 */}
-        <section className="mb-12">
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-            <Calendar className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
-            경력 이력 (Work Experience)
-          </h2>
-
-          <div className="bg-white dark:bg-slate-900/80 rounded-2xl p-6 border border-slate-200/70 dark:border-slate-800 shadow-sm">
-            <div className="relative border-l-2 border-indigo-100 dark:border-slate-800 ml-3 space-y-8">
-              {timeline.map((item, idx) => (
-                <div key={idx} className="relative pl-6">
-                  {/* 타임라인 원형 아이콘 */}
-                  <div className="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-indigo-600 ring-4 ring-white dark:ring-slate-900" />
-                  
-                  <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-2.5 py-1 rounded-md">
-                    {item.period}
-                  </span>
-                  
-                  <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mt-2">
-                    {item.role} <span className="text-slate-400 font-normal">@ {item.company}</span>
-                  </h3>
-                  
-                  <p className="text-slate-600 dark:text-slate-400 text-sm mt-1 leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* 7. 대화 신청 CTA 카드 */}
-        <div className="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-3xl p-8 sm:p-10 text-white shadow-xl shadow-indigo-500/20 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              함께 멋진 프로젝트를 만들어볼까요?
+        {/* 7. 하단 네오 브루탈리즘 CTA 카드 */}
+        <div className="neo-box-static bg-pink-400 rounded-2xl p-8 sm:p-10 text-black text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="space-y-2">
+            <span className="neo-badge bg-yellow-300 text-black">LET'S CONNECT</span>
+            <h2 className="text-2xl sm:text-4xl font-black uppercase tracking-tight leading-tight">
+              함께 멋진 프로젝트를 만들어볼까요? ⚡
             </h2>
-            <p className="text-indigo-100 text-sm sm:text-base mt-2 max-w-xl">
-              새로운 포지션 제안이나 협업 프로젝트 아이디어가 있으시다면 언제든 편하게 연락해 주세요.
+            <p className="font-bold text-black text-sm sm:text-base">
+              새로운 포지션 제안이나 협업 프로젝트 아이디어가 있으시다면 언제든 연락해 주세요!
             </p>
           </div>
           <a
             href="mailto:hyeonah.park@example.com"
-            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-white text-indigo-600 hover:bg-indigo-50 font-bold text-sm shadow-lg transition-transform duration-200 hover:scale-105 active:scale-95 whitespace-nowrap"
+            className="neo-btn bg-amber-300 text-black px-7 py-4 rounded-xl text-base font-black shrink-0"
           >
-            <Send className="w-4 h-4" />
-            메일 보내기
+            <Send className="w-5 h-5 mr-2" />
+            SEND MESSAGE
           </a>
         </div>
 
         {/* 8. 풋터 */}
-        <footer className="mt-16 text-center text-xs text-slate-400 dark:text-slate-600 flex flex-col items-center gap-2">
-          <p>© 2026 박현아 (Hyeonah Park). All rights reserved.</p>
-          <p className="flex items-center gap-1">
-            Built with Next.js & Tailwind CSS <Heart className="w-3 h-3 text-red-500 fill-red-500" />
-          </p>
+        <footer className="pt-8 text-center text-xs font-bold text-black flex flex-col items-center gap-2">
+          <div className="neo-badge bg-white text-black">
+            © 2026 HYEONAH PARK // NEOBRUTALISM EDITION
+          </div>
         </footer>
       </main>
     </div>
