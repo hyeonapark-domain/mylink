@@ -1,8 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fef9c3;
-  --foreground: #000000;
+  --tds-blue-500: #3182f6;
+  --tds-blue-600: #1b64da;
+  --tds-blue-50: #e8f3ff;
+  
+  --tds-grey-900: #191f28;
+  --tds-grey-800: #333d4b;
+  --tds-grey-700: #4e5968;
+  --tds-grey-600: #6b7684;
+  --tds-grey-500: #8b95a1;
+  --tds-grey-400: #b0b8c1;
+  --tds-grey-200: #e5e8eb;
+  --tds-grey-100: #f2f4f6;
+  --tds-grey-50: #f9fafb;
+  --tds-white: #ffffff;
+
+  --background: var(--tds-grey-100);
+  --foreground: var(--tds-grey-900);
 }
 
 @theme inline {
@@ -13,78 +28,57 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Segoe UI", Roboto, sans-serif;
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  /* Retro Neobrutalist Dot Pattern Background */
-  background-image: radial-gradient(#000000 1.2px, transparent 1.2px);
-  background-size: 24px 24px;
 }
 
-/* Neobrutalism Custom Utilities */
-.neo-box {
-  background-color: #ffffff;
-  border: 3px solid #000000;
-  box-shadow: 5px 5px 0px 0px #000000;
-  transition: all 0.15s ease-in-out;
+/* TDS Button Styles */
+.tds-btn-primary {
+  background-color: var(--tds-blue-500);
+  color: var(--tds-white);
+  font-weight: 700;
+  border-radius: 9999px;
+  transition: background-color 0.15s ease-in-out, transform 0.1s ease;
 }
 
-.neo-box:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 7px 7px 0px 0px #000000;
+.tds-btn-primary:hover {
+  background-color: var(--tds-blue-600);
 }
 
-.neo-box-static {
-  background-color: #ffffff;
-  border: 3px solid #000000;
-  box-shadow: 5px 5px 0px 0px #000000;
+.tds-btn-primary:active {
+  transform: scale(0.98);
 }
 
-.neo-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 3px solid #000000;
-  box-shadow: 4px 4px 0px 0px #000000;
-  font-weight: 800;
-  transition: all 0.1s ease-in-out;
-  cursor: pointer;
-  user-select: none;
+.tds-btn-secondary {
+  background-color: var(--tds-grey-200);
+  color: var(--tds-grey-800);
+  font-weight: 600;
+  border-radius: 9999px;
+  transition: background-color 0.15s ease-in-out;
 }
 
-.neo-btn:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px 0px #000000;
+.tds-btn-secondary:hover {
+  background-color: #dbe0e5;
 }
 
-.neo-btn:active {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0px 0px #000000;
+/* TDS Card Base */
+.tds-card {
+  background-color: var(--tds-white);
+  border-radius: 24px;
+  border: 1px solid var(--tds-grey-200);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.neo-badge {
-  display: inline-flex;
-  align-items: center;
-  border: 2px solid #000000;
-  box-shadow: 2px 2px 0px 0px #000000;
-  font-weight: 800;
-  font-size: 0.75rem;
-  padding: 0.25rem 0.625rem;
-  border-radius: 0.375rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+.tds-card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
 }
 
-@keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
-}
-
-.animate-marquee {
-  display: flex;
-  width: 200%;
-  animation: marquee 20s linear infinite;
-}
-
-.animate-marquee:hover {
-  animation-play-state: paused;
+/* Number Tabular Figures */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
 }
