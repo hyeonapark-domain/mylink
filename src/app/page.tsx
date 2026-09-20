@@ -135,7 +135,7 @@ export default function NeobrutalismProfilePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#fffdf5] text-black font-sans selection:bg-black selection:text-amber-300 pb-20">
+    <div className="min-h-screen bg-[#fef9c3] text-black font-sans selection:bg-black selection:text-amber-300 pb-20">
       {/* 1. 상단 마키 롤링 배너 (Neobrutalism Strips) */}
       <div className="bg-amber-300 border-b-4 border-black overflow-hidden py-2.5 whitespace-nowrap font-black uppercase text-xs sm:text-sm tracking-widest select-none">
         <div className="animate-marquee flex gap-8">

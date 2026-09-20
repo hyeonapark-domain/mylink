@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fffdf5;
+  --background: #fef9c3;
   --foreground: #000000;
 }
 
@@ -16,7 +16,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Segoe UI", Roboto, sans-serif;
   overflow-x: hidden;
   /* Retro Neobrutalist Dot Pattern Background */
-  background-image: radial-gradient(#000000 1px, transparent 1px);
+  background-image: radial-gradient(#000000 1.2px, transparent 1.2px);
   background-size: 24px 24px;
 }
 
