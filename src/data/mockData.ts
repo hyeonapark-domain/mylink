@@ -7,7 +7,7 @@ export const initialLinks: LinkItem[] = [
   {
     id: 'link-1',
     type: 'youtube',
-    title: '유튜브',
+    title: '🎬 최신 YouTube 영상: 토스 디자인 시스템 만들기',
     url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
     embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
     icon: 'Youtube',
@@ -18,7 +18,7 @@ export const initialLinks: LinkItem[] = [
   {
     id: 'link-2',
     type: 'link',
-    title: '포트폴리오 웹사이트',
+    title: '🚀 2026 프론트엔드 포트폴리오 웹사이트 바로가기',
     url: 'https://github.com',
     icon: 'Globe',
     isActive: true,
@@ -28,7 +28,7 @@ export const initialLinks: LinkItem[] = [
   {
     id: 'link-3',
     type: 'music',
-    title: '음악 플레이리스트',
+    title: '🎵 작업할 때 듣는 Lofi Playlist (Spotify)',
     url: 'https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M',
     embedUrl: 'https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M',
     icon: 'Music',
@@ -39,7 +39,7 @@ export const initialLinks: LinkItem[] = [
   {
     id: 'link-4',
     type: 'link',
-    title: '커피 후원하기',
+    title: '☕ 커피 한 잔 후원하기 (Buy Me a Coffee)',
     url: 'https://buymeacoffee.com',
     icon: 'Coffee',
     isActive: true,
@@ -49,7 +49,7 @@ export const initialLinks: LinkItem[] = [
   {
     id: 'link-5',
     type: 'link',
-    title: '기술 블로그',
+    title: '📚 기술 블로그 & 개발 아티클 읽기 (Velog/Tistory)',
     url: 'https://velog.io',
     icon: 'BookOpen',
     isActive: true,
@@ -59,7 +59,7 @@ export const initialLinks: LinkItem[] = [
   {
     id: 'link-6',
     type: 'link',
-    title: '굿즈 스토어',
+    title: '🛍️ 김토스 공식 굿즈 스토어 세일 진행 중',
     url: 'https://smartstore.naver.com',
     icon: 'ShoppingBag',
     isActive: false,
@@ -69,8 +69,8 @@ export const initialLinks: LinkItem[] = [
   {
     id: 'link-7',
     type: 'link',
-    title: '비즈니스 이메일',
-    url: 'mailto:hyunah@example.com',
+    title: '✉️ 비즈니스 및 협업 문의 (이메일 보르기)',
+    url: 'mailto:contact@toss.im',
     icon: 'Mail',
     isActive: true,
     order: 6,

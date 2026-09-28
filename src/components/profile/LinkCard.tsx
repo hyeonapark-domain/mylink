@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { LinkItem, ThemeConfig } from '@/types';
-import { Badge } from '@/components/ui/badge';
+import { LinkItem } from '@/types';
 import {
   Youtube,
   Globe,
@@ -15,120 +14,111 @@ import {
   ChevronDown,
   ChevronUp,
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { MediaEmbedCard } from './MediaEmbedCard';
 
 interface LinkCardProps {
   link: LinkItem;
-  theme?: ThemeConfig;
+  buttonStyle?: string; // TDS buttonStyle token
   onLinkClick: (linkId: string) => void;
 }
 
-const renderLinkIcon = (iconName?: string, type?: string) => {
-  const iconClass = "w-5 h-5 flex-shrink-0";
-  switch (iconName?.toLowerCase() || type) {
-    case 'youtube':
-      return <Youtube className={`${iconClass} text-red-500`} />;
-    case 'music':
-    case 'spotify':
-      return <Music className={`${iconClass} text-green-500`} />;
-    case 'coffee':
-    case 'buymeacoffee':
-      return <Coffee className={`${iconClass} text-amber-600`} />;
-    case 'bookopen':
-    case 'velog':
-      return <BookOpen className={`${iconClass} text-emerald-600`} />;
-    case 'shoppingbag':
-    case 'smartstore':
-      return <ShoppingBag className={`${iconClass} text-indigo-500`} />;
-    case 'mail':
-    case 'email':
-      return <Mail className={`${iconClass} text-blue-500`} />;
-    default:
-      return <Globe className={`${iconClass} text-toss-grey-700`} />;
-  }
+const ICON_MAP: Record<string, React.ReactNode> = {
+  youtube: <Youtube className="size-[18px] flex-shrink-0 text-red-500" />,
+  music: <Music className="size-[18px] flex-shrink-0 text-green-500" />,
+  coffee: <Coffee className="size-[18px] flex-shrink-0 text-amber-600" />,
+  bookopen: <BookOpen className="size-[18px] flex-shrink-0 text-emerald-600" />,
+  shoppingbag: <ShoppingBag className="size-[18px] flex-shrink-0 text-indigo-500" />,
+  mail: <Mail className="size-[18px] flex-shrink-0 text-toss-blue-500" />,
+  globe: <Globe className="size-[18px] flex-shrink-0 text-toss-grey-700" />,
 };
 
-export const LinkCard: React.FC<LinkCardProps> = ({ link, theme, onLinkClick }) => {
+function getLinkIcon(icon?: string, type?: string): React.ReactNode {
+  const key = (icon ?? type ?? '').toLowerCase();
+  return ICON_MAP[key] ?? ICON_MAP['globe'];
+}
+
+const BUTTON_RADIUS_MAP: Record<string, string> = {
+  'rounded-full': 'rounded-full',
+  'rounded-xl': 'rounded-[16px]',
+  'rounded-lg': 'rounded-xl',
+  outline: 'rounded-[16px] border-2 border-toss-blue-500 bg-transparent text-toss-blue-500 hover:bg-toss-blue-50',
+};
+
+export function LinkCard({ link, buttonStyle = 'rounded-xl', onLinkClick }: LinkCardProps) {
   const [showEmbed, setShowEmbed] = useState(false);
+  const hasEmbed = Boolean(link.embedUrl);
+  const radiusCls = BUTTON_RADIUS_MAP[buttonStyle] ?? 'rounded-[16px]';
 
   const handleClick = () => {
     onLinkClick(link.id);
   };
 
-  const hasMediaEmbed = Boolean(link.embedUrl);
-
-  const getButtonStyle = () => {
-    switch (theme?.buttonStyle) {
-      case 'rounded-full':
-        return 'rounded-full';
-      case 'rounded-lg':
-        return 'rounded-lg';
-      case 'outline':
-        return 'rounded-2xl border-2 border-toss-blue-500 bg-transparent text-toss-blue-500';
-      case 'rounded-xl':
-      default:
-        return 'rounded-[16px]';
-    }
-  };
-
   return (
-    <div className="w-full space-y-2">
-      <div className="relative group">
-        <a
-          href={link.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={handleClick}
+    <div className="flex w-full flex-col gap-2">
+      {/* 메인 링크 버튼 — 56px 높이, TDS 스타일 */}
+      <div className="group relative flex w-full items-center">
+        {/* 링크 본문 (전체 너비) */}
+        <Button
+          variant="outline"
           className={`
-            flex items-center justify-between w-full h-[56px] px-5
-            bg-white border border-toss-grey-200 shadow-2xs
-            hover:border-toss-blue-500 hover:shadow-xs active:scale-[0.985]
-            transition-all duration-200 cursor-pointer
-            ${getButtonStyle()}
+            h-14 w-full flex-1 justify-start gap-3.5 border-toss-grey-200 bg-white
+            px-5 pr-${hasEmbed ? '12' : '5'} text-toss-grey-900 shadow-2xs
+            hover:border-toss-blue-500 hover:bg-white hover:shadow-xs
+            active:scale-[0.985] transition-all duration-150
+            ${radiusCls}
           `}
+          asChild
+          onClick={handleClick}
         >
-          {/* 좌측: 아이콘 + 제목 */}
-          <div className="flex items-center space-x-3.5 min-w-0 pr-2">
-            {renderLinkIcon(link.icon, link.type)}
-            <span className="text-[15px] font-semibold text-toss-grey-900 truncate">
+          <a href={link.url} target="_blank" rel="noopener noreferrer">
+            {getLinkIcon(link.icon, link.type)}
+
+            <span className="flex-1 truncate text-[15px] font-semibold">
               {link.title}
             </span>
-          </div>
 
-          {/* 우측: 클릭 카운트 / 미디어 토글 / 외부 링크 아이콘 */}
-          <div className="flex items-center space-x-2 flex-shrink-0 text-toss-grey-400">
+            {/* 클릭 수 뱃지 */}
             {link.clickCount > 0 && (
-              <Badge variant="secondary" className="font-mono text-xs font-medium">
+              <Badge
+                variant="secondary"
+                className="shrink-0 rounded-full bg-toss-grey-100 font-mono text-xs text-toss-grey-700 tabular-nums"
+              >
                 {link.clickCount.toLocaleString()}
               </Badge>
             )}
 
-            {hasMediaEmbed ? (
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  setShowEmbed((prev) => !prev);
-                }}
-                className="p-1 hover:bg-toss-grey-100 rounded-full text-toss-grey-700 transition-colors cursor-pointer"
-                title={showEmbed ? "미디어 접기" : "미디어 펼치기"}
-              >
-                {showEmbed ? (
-                  <ChevronUp className="w-4 h-4 text-toss-blue-500" />
-                ) : (
-                  <ChevronDown className="w-4 h-4 text-toss-grey-700" />
-                )}
-              </button>
-            ) : (
-              <ExternalLink className="w-4 h-4 group-hover:text-toss-blue-500 transition-colors" />
+            {!hasEmbed && (
+              <ExternalLink className="size-4 shrink-0 text-toss-grey-400 group-hover:text-toss-blue-500 transition-colors" />
             )}
-          </div>
-        </a>
+          </a>
+        </Button>
+
+        {/* 미디어 토글 버튼 — 카드 우측에 absolute 배치 */}
+        {hasEmbed && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="absolute right-2 size-8 shrink-0 rounded-full text-toss-grey-400 hover:bg-toss-grey-100 hover:text-toss-blue-500 transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowEmbed((prev) => !prev);
+            }}
+            aria-label={showEmbed ? '미디어 접기' : '미디어 펼치기'}
+          >
+            {showEmbed ? (
+              <ChevronUp className="size-4 text-toss-blue-500" />
+            ) : (
+              <ChevronDown className="size-4" />
+            )}
+          </Button>
+        )}
       </div>
 
       {/* 미디어 임베드 아코디언 */}
-      {hasMediaEmbed && showEmbed && <MediaEmbedCard link={link} />}
+      {hasEmbed && showEmbed && <MediaEmbedCard link={link} />}
     </div>
   );
-};
+}

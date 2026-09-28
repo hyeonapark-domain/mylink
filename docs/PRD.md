@@ -8,7 +8,8 @@
 - **서비스명**: 마이링크 (My Link)
 - **서비스 목적**: 개인 크리에이터 및 일반 사용자가 자신만의 고유한 단일 프로필 페이지를 만들고, 소셜 미디어, 웹사이트 링크, 미디어 콘텐츠를 한곳에 모아 공유할 수 있는 **링크트리(Linktree) 클론 서비스**입니다.
 - **구동 환경**: 별도의 서버 구축 없이 브라우저 환경에서 즉시 동작하는 **Mock 데이터 및 로컬 스토리지(LocalStorage) 기반 클라이언트 전용 데모 애플리케이션**입니다.
-- **디자인 컨셉**: **shadcn/ui**를 기반 컴포넌트 라이브러리로 채택(`src/components/ui/`)하고, 모듈 CSS가 아닌 **Tailwind CSS**로 스타일을 일원화 통일하며, **토스 디자인 시스템(TDS - Toss Design System)**의 디자인 언어, 컬러 토큰, 타이포그래피, 마이크로 카피(해요체)를 결합하여 정갈하고 완성도 높은 UI/UX를 제공합니다.
+- **디자인 컨셉**: **shadcn/ui**를 기본 컴포넌트 라이브러리로 채택하고, **토스 디자인 시스템(TDS - Toss Design System)**의 디자인 언어, 컬러 토큰, 타이포그래피, 마이크로 카피(해요체)를 결합하여 정갈하고 완성도 높은 UI/UX를 제공합니다.
+- **스타일링 방식**: 모든 UI 스타일은 **CSS 모듈(CSS Modules)을 사용하지 않으며**, **Tailwind CSS 유틸리티 클래스**로만 작성합니다. 재사용 가능한 컴포넌트는 반드시 `src/components/ui/` 경로의 **shadcn/ui 컴포넌트**(`Button`, `Card`, `Avatar`, `Badge`, `Separator` 등)를 조합하여 구성합니다.
 
 ### 1.2 핵심 특징
 1. **Zustand 전역 상태 관리**: 보일러플레이트가 적고 직관적인 **Zustand** 스토어를 사용하며, `persist` 미들웨어를 통해 `localStorage`와 자동 영속화됩니다.
@@ -16,7 +17,7 @@
 3. **드래그 앤 드롭 순서 변경**: 링크 목록을 손쉽게 끌어서 순서를 변경할 수 있습니다.
 4. **로컬 스토리지 데이터 영속성**: 브라우저를 새로고침하거나 재방문해도 편집한 내용과 통계 데이터가 유지됩니다.
 5. **기본 통계 분석 시각화**: 총 프로필 방문 수, 개별 링크 클릭 수, 최근 7일/30일 추이 차트를 제공합니다.
-6. **shadcn/ui & Tailwind CSS 기반 디자인 시스템**: 모듈 CSS 대신 전적으로 **Tailwind CSS**만을 활용하여 스타일링을 통일하고, **shadcn/ui** 재사용 컴포넌트(Button, Card, Badge, Avatar 등)를 기반으로 모든 UI를 구현합니다. 토스 블루(`blue-500: #3182F6`), 무채색 Cool Grey 톤, Pretendard 폰트 스택 및 토스 스타일 라운드/컴포넌트 체계를 완벽히 적용합니다.
+6. **shadcn/ui & Tailwind CSS 기반 디자인 시스템**: 모든 UI는 **shadcn/ui** 컴포넌트(`Button`, `Card`, `Avatar`, `Badge`, `Separator`)를 기반으로 구현하며, **Tailwind CSS** 유틸리티 클래스로만 스타일을 적용합니다. 토스 블루(`blue-500: #3182F6`), 무채색 Cool Grey 톤, Pretendard 폰트 스택 및 토스 스타일 라운드/컴포넌트 체계를 완벽히 적용합니다.
 
 ---
 
@@ -115,9 +116,16 @@ export interface MyLinkState {
 
 ---
 
-## 3. 디자인 시스템 (shadcn/ui & Toss Design System 기반) 가이드라인
+## 3. 디자인 시스템 (shadcn/ui & Tailwind CSS / Toss Design System 기반) 가이드라인
 
 본 서비스의 모든 UI 컴포넌트는 **shadcn/ui**를 기본 컴포넌트 라이브러리로 활용하며, **토스 디자인 시스템(TDS)**의 컬러 토큰, 타이포그래피 및 라운드 가이드라인을 주입하여 구현합니다.
+
+> **[필수 규칙] 스타일링 정책**
+> - **CSS 모듈(`.module.css`)은 사용하지 않습니다.**
+> - 모든 스타일은 **Tailwind CSS 유틸리티 클래스**로만 작성합니다.
+> - 재사용 가능한 UI 컴포넌트는 반드시 `src/components/ui/` 경로에 위치한 **shadcn/ui 컴포넌트**(`Button`, `Card`, `Avatar`, `Badge`, `Separator` 등)를 기반으로 구성합니다.
+> - 커스텀 스타일 오버라이드가 필요한 경우 `cn()` 유틸리티(clsx + tailwind-merge)로 클래스를 병합합니다.
+
 
 ### 3.1 컬러 토큰 (Color Tokens)
 

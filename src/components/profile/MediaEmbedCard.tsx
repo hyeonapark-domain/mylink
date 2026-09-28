@@ -2,51 +2,56 @@
 
 import React from 'react';
 import { LinkItem } from '@/types';
-import { Card } from '@/components/ui/card';
 import { Play, Music } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 interface MediaEmbedCardProps {
   link: LinkItem;
 }
 
-export const MediaEmbedCard: React.FC<MediaEmbedCardProps> = ({ link }) => {
+export function MediaEmbedCard({ link }: MediaEmbedCardProps) {
   if (!link.embedUrl) return null;
 
-  return (
-    <Card className="w-full overflow-hidden p-3 space-y-2 transition-all">
-      <div className="flex items-center space-x-2 text-xs font-semibold text-toss-grey-700 px-1">
-        {link.type === 'youtube' ? (
-          <>
-            <Play className="w-3.5 h-3.5 text-red-500 fill-red-500" />
-            <span>YouTube 미리보기</span>
-          </>
-        ) : (
-          <>
-            <Music className="w-3.5 h-3.5 text-green-500" />
-            <span>음악 오디오 플레이어</span>
-          </>
-        )}
-      </div>
+  const isYoutube = link.type === 'youtube';
 
-      <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-toss-grey-100 border border-toss-grey-200">
-        {link.type === 'youtube' ? (
+  return (
+    <Card className="w-full gap-3 rounded-2xl border-toss-grey-200 bg-white py-4 shadow-xs">
+      <CardContent className="px-4">
+        {/* 타입 표시 배지 */}
+        <Badge
+          variant="secondary"
+          className="mb-3 gap-1.5 rounded-full bg-toss-grey-100 text-toss-grey-700 font-medium"
+        >
+          {isYoutube ? (
+            <>
+              <Play className="size-3 fill-red-500 text-red-500" />
+              YouTube 미리보기
+            </>
+          ) : (
+            <>
+              <Music className="size-3 text-green-500" />
+              음악 오디오 플레이어
+            </>
+          )}
+        </Badge>
+
+        {/* iframe 임베드 영역 */}
+        <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-toss-grey-200 bg-toss-grey-100">
           <iframe
             src={link.embedUrl}
             title={link.title}
-            className="absolute top-0 left-0 w-full h-full border-0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            className="absolute inset-0 size-full border-0"
+            allow={
+              isYoutube
+                ? 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                : 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
+            }
             allowFullScreen
-          />
-        ) : (
-          <iframe
-            src={link.embedUrl}
-            title={link.title}
-            className="absolute top-0 left-0 w-full h-full border-0"
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
             loading="lazy"
           />
-        )}
-      </div>
+        </div>
+      </CardContent>
     </Card>
   );
-};
+}

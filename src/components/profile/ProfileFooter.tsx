@@ -3,13 +3,14 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Share2, Check, Eye } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+import { Eye, Share2, Check } from 'lucide-react';
 
 interface ProfileFooterProps {
   totalViews: number;
 }
 
-export const ProfileFooter: React.FC<ProfileFooterProps> = ({ totalViews }) => {
+export function ProfileFooter({ totalViews }: ProfileFooterProps) {
   const [copied, setCopied] = useState(false);
 
   const handleShare = async () => {
@@ -25,49 +26,56 @@ export const ProfileFooter: React.FC<ProfileFooterProps> = ({ totalViews }) => {
         setTimeout(() => setCopied(false), 2000);
       }
     } catch {
-      // ignore copy error
+      // ignore
     }
   };
 
   return (
-    <footer className="w-full pt-8 pb-12 flex flex-col items-center justify-center space-y-4">
-      {/* 하단 유틸리티 스택: 방문자 수 카운트 & 공유하기 */}
-      <div className="flex items-center space-x-3">
-        <Badge variant="outline" className="px-3 py-1.5 rounded-full bg-white text-toss-grey-700 space-x-1.5 shadow-2xs">
-          <Eye className="w-3.5 h-3.5 text-toss-blue-500" />
-          <span>총 방문자 {totalViews.toLocaleString()}회</span>
+    <footer className="flex flex-col items-center gap-4 px-6 pb-10 pt-6">
+      <Separator className="bg-toss-grey-200" />
+
+      {/* 방문자 수 + 공유 버튼 */}
+      <div className="flex items-center gap-2.5">
+        {/* 방문자 수 뱃지 */}
+        <Badge
+          variant="outline"
+          className="gap-1.5 rounded-full border-toss-grey-200 bg-white px-3 py-1.5 text-xs font-medium text-toss-grey-700 shadow-2xs"
+        >
+          <Eye className="size-3.5 text-toss-blue-500" />
+          총 방문자 {totalViews.toLocaleString()}회
         </Badge>
 
+        {/* 공유하기 버튼 */}
         <Button
+          variant="outline"
           size="sm"
-          variant="secondary"
+          className="gap-1.5 rounded-full border-toss-blue-500/20 bg-toss-blue-50 px-3 text-xs font-semibold text-toss-blue-500 shadow-2xs hover:bg-toss-blue-500 hover:text-white transition-all"
           onClick={handleShare}
-          className="rounded-full bg-toss-blue-50 text-toss-blue-500 border border-toss-blue-500/20 hover:bg-toss-blue-500 hover:text-white space-x-1.5 shadow-2xs"
         >
           {copied ? (
             <>
-              <Check className="w-3.5 h-3.5" />
-              <span>복사됨!</span>
+              <Check className="size-3.5" />
+              복사됨!
             </>
           ) : (
             <>
-              <Share2 className="w-3.5 h-3.5" />
-              <span>공유하기</span>
+              <Share2 className="size-3.5" />
+              공유하기
             </>
           )}
         </Button>
       </div>
 
-      {/* 브랜드 카피 및 디자이너 크레딧 */}
-      <div className="text-center space-y-1">
-        <div className="inline-flex items-center space-x-1.5 text-xs text-toss-grey-400">
-          <span>Powered by</span>
+      {/* 브랜드 크레딧 */}
+      <div className="flex flex-col items-center gap-1">
+        <p className="text-xs text-toss-grey-400">
+          Powered by{' '}
           <span className="font-bold text-toss-blue-500">마이링크 (My Link)</span>
-        </div>
+        </p>
         <p className="text-[11px] text-toss-grey-400">
           Toss Design System (TDS) based single profile
         </p>
       </div>
     </footer>
   );
-};
+}
