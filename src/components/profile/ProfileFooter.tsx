@@ -2,15 +2,14 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Eye, Share2, Check } from 'lucide-react';
+import { Share2, Check } from 'lucide-react';
 
 interface ProfileFooterProps {
-  totalViews: number;
+  totalViews?: number;
 }
 
-export function ProfileFooter({ totalViews }: ProfileFooterProps) {
+export function ProfileFooter({}: ProfileFooterProps) {
   const [copied, setCopied] = useState(false);
 
   const handleShare = async () => {
@@ -31,36 +30,26 @@ export function ProfileFooter({ totalViews }: ProfileFooterProps) {
   };
 
   return (
-    <footer className="flex flex-col items-center gap-4 px-6 pb-10 pt-6">
+    <footer className="flex flex-col items-center gap-5 px-6 pb-10 pt-6">
       <Separator className="bg-toss-grey-200" />
 
-      {/* 방문자 수 + 공유 버튼 */}
-      <div className="flex items-center gap-2.5">
-        {/* 방문자 수 뱃지 */}
-        <Badge
-          variant="outline"
-          className="gap-1.5 rounded-full border-toss-grey-200 bg-white px-3 py-1.5 text-xs font-medium text-toss-grey-700 shadow-2xs"
-        >
-          <Eye className="size-3.5 text-toss-blue-500" />
-          총 방문자 {totalViews.toLocaleString()}회
-        </Badge>
-
-        {/* 공유하기 버튼 */}
+      {/* 공유하기 버튼 (방문자 수는 전면에 노출하지 않음) */}
+      <div className="flex items-center justify-center">
         <Button
           variant="outline"
           size="sm"
-          className="gap-1.5 rounded-full border-toss-blue-500/20 bg-toss-blue-50 px-3 text-xs font-semibold text-toss-blue-500 shadow-2xs hover:bg-toss-blue-500 hover:text-white transition-all"
+          className="gap-1.5 rounded-full border-toss-blue-500/20 bg-toss-blue-50 px-4 py-2 text-xs font-semibold text-toss-blue-500 shadow-2xs hover:bg-toss-blue-500 hover:text-white transition-all"
           onClick={handleShare}
         >
           {copied ? (
             <>
               <Check className="size-3.5" />
-              복사됨!
+              링크가 복사되었어요!
             </>
           ) : (
             <>
               <Share2 className="size-3.5" />
-              공유하기
+              프로필 공유하기
             </>
           )}
         </Button>

@@ -138,6 +138,33 @@ export const useMyLinkStore = create<MyLinkState>()(
     {
       name: 'my-link-storage',
       storage: createJSONStorage(() => localStorage),
+      version: 2,
+      migrate: (persistedState: any) => {
+        if (!persistedState) return persistedState;
+        const titleMap: Record<string, { title: string; icon?: string }> = {
+          'link-1': { title: 'YouTube', icon: 'Youtube' },
+          'link-2': { title: 'GitHub', icon: 'Github' },
+          'link-3': { title: 'Spotify', icon: 'Music' },
+          'link-4': { title: 'Blog', icon: 'BookOpen' },
+          'link-5': { title: 'Buy Me a Coffee', icon: 'Coffee' },
+          'link-6': { title: 'Store', icon: 'ShoppingBag' },
+          'link-7': { title: 'Email', icon: 'Mail' },
+        };
+        const updatedLinks = (persistedState.links || []).map((l: any) => {
+          if (titleMap[l.id]) {
+            return {
+              ...l,
+              title: titleMap[l.id].title,
+              icon: titleMap[l.id].icon ?? l.icon,
+            };
+          }
+          return l;
+        });
+        return {
+          ...persistedState,
+          links: updatedLinks,
+        };
+      },
     }
   )
 );

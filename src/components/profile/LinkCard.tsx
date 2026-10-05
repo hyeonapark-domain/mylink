@@ -13,6 +13,15 @@ import {
   ExternalLink,
   ChevronDown,
   ChevronUp,
+  Github,
+  Briefcase,
+  MessageSquare,
+  Calendar,
+  FileText,
+  Palette,
+  Figma,
+  Smartphone,
+  Megaphone,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -32,6 +41,15 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   shoppingbag: <ShoppingBag className="size-[18px] flex-shrink-0 text-indigo-500" />,
   mail: <Mail className="size-[18px] flex-shrink-0 text-toss-blue-500" />,
   globe: <Globe className="size-[18px] flex-shrink-0 text-toss-grey-700" />,
+  github: <Github className="size-[18px] flex-shrink-0 text-toss-grey-900" />,
+  briefcase: <Briefcase className="size-[18px] flex-shrink-0 text-blue-600" />,
+  messagesquare: <MessageSquare className="size-[18px] flex-shrink-0 text-yellow-500" />,
+  calendar: <Calendar className="size-[18px] flex-shrink-0 text-orange-500" />,
+  filetext: <FileText className="size-[18px] flex-shrink-0 text-teal-600" />,
+  palette: <Palette className="size-[18px] flex-shrink-0 text-purple-500" />,
+  figma: <Figma className="size-[18px] flex-shrink-0 text-pink-500" />,
+  smartphone: <Smartphone className="size-[18px] flex-shrink-0 text-cyan-600" />,
+  megaphone: <Megaphone className="size-[18px] flex-shrink-0 text-amber-500" />,
 };
 
 function getLinkIcon(icon?: string, type?: string): React.ReactNode {
@@ -63,8 +81,8 @@ export function LinkCard({ link, buttonStyle = 'rounded-xl', onLinkClick }: Link
         <Button
           variant="outline"
           className={`
-            h-14 w-full flex-1 justify-start gap-3.5 border-toss-grey-200 bg-white
-            px-5 pr-${hasEmbed ? '12' : '5'} text-toss-grey-900 shadow-2xs
+            h-14 w-full flex-1 justify-start gap-3.5 border-toss-grey-200/80 bg-white
+            px-4 ${hasEmbed ? 'pr-12' : 'pr-4.5'} text-toss-grey-900 shadow-2xs
             hover:border-toss-blue-500 hover:bg-white hover:shadow-xs
             active:scale-[0.985] transition-all duration-150
             ${radiusCls}
@@ -73,9 +91,11 @@ export function LinkCard({ link, buttonStyle = 'rounded-xl', onLinkClick }: Link
           onClick={handleClick}
         >
           <a href={link.url} target="_blank" rel="noopener noreferrer">
-            {getLinkIcon(link.icon, link.type)}
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-toss-grey-100/70 group-hover:bg-toss-blue-50 transition-colors">
+              {getLinkIcon(link.icon, link.type)}
+            </div>
 
-            <span className="flex-1 truncate text-[15px] font-semibold">
+            <span className="flex-1 truncate text-[15px] font-semibold tracking-tight text-toss-grey-900 group-hover:text-toss-blue-600 transition-colors">
               {link.title}
             </span>
 
@@ -83,7 +103,7 @@ export function LinkCard({ link, buttonStyle = 'rounded-xl', onLinkClick }: Link
             {link.clickCount > 0 && (
               <Badge
                 variant="secondary"
-                className="shrink-0 rounded-full bg-toss-grey-100 font-mono text-xs text-toss-grey-700 tabular-nums"
+                className="shrink-0 rounded-full bg-toss-grey-100 font-mono text-[11px] text-toss-grey-700 tabular-nums px-2 py-0.5"
               >
                 {link.clickCount.toLocaleString()}
               </Badge>
