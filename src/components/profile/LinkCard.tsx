@@ -82,7 +82,7 @@ export function LinkCard({ link, buttonStyle = 'rounded-xl', onLinkClick }: Link
           variant="outline"
           className={`
             h-14 w-full flex-1 justify-start gap-3.5 border-toss-grey-200/80 bg-white
-            px-4 ${hasEmbed ? 'pr-12' : 'pr-4.5'} text-toss-grey-900 shadow-2xs
+            px-4 ${hasEmbed ? 'pr-12' : 'pr-4'} text-toss-grey-900 shadow-2xs
             hover:border-toss-blue-500 hover:bg-white hover:shadow-xs
             active:scale-[0.985] transition-all duration-150
             ${radiusCls}
@@ -95,25 +95,28 @@ export function LinkCard({ link, buttonStyle = 'rounded-xl', onLinkClick }: Link
               {getLinkIcon(link.icon, link.type)}
             </div>
 
-            <span className="flex-1 truncate text-[15px] font-semibold tracking-tight text-toss-grey-900 group-hover:text-toss-blue-600 transition-colors">
+            <span className="min-w-0 flex-1 truncate text-[15px] font-semibold tracking-tight text-toss-grey-900 group-hover:text-toss-blue-600 transition-colors">
               {link.title}
             </span>
 
             {/* 클릭 수 뱃지 */}
-            {link.clickCount > 0 && (
-              <Badge
-                variant="secondary"
-                className="shrink-0 rounded-full bg-toss-grey-100 font-mono text-[11px] text-toss-grey-700 tabular-nums px-2 py-0.5"
-              >
-                {link.clickCount.toLocaleString()}
-              </Badge>
-            )}
+            <div className="ml-auto flex shrink-0 items-center gap-1.5">
+              {link.clickCount > 0 && (
+                <Badge
+                  variant="secondary"
+                  className="rounded-full bg-toss-grey-100 font-mono text-[11px] text-toss-grey-700 tabular-nums px-2 py-0.5"
+                >
+                  {link.clickCount.toLocaleString()}
+                </Badge>
+              )}
 
-            {!hasEmbed && (
-              <ExternalLink className="size-4 shrink-0 text-toss-grey-400 group-hover:text-toss-blue-500 transition-colors" />
-            )}
+              {!hasEmbed && (
+                <ExternalLink className="size-4 shrink-0 text-toss-grey-400 group-hover:text-toss-blue-500 transition-colors" />
+              )}
+            </div>
           </a>
         </Button>
+
 
         {/* 미디어 토글 버튼 — 카드 우측에 absolute 배치 */}
         {hasEmbed && (

@@ -1,6 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { useMyLinkStore } from '@/store/useMyLinkStore';
 import { LinkType } from '@/types';
 import {
@@ -30,6 +33,7 @@ import {
   Calendar,
   Plus,
   Sparkles,
+  AlertCircle,
 } from 'lucide-react';
 
 interface AddLinkDialogProps {
@@ -88,11 +92,80 @@ function extractSpotifyEmbed(url: string): string | null {
   return null;
 }
 
+function isValidUrl(val: string): boolean {
+  if (!val || typeof val !== 'string') return false;
+  const trimmed = val.trim();
+  // 공백이 포함된 일반 문장은 URL이 아님
+  if (trimmed.includes(' ') || trimmed.includes('\t') || trimmed.includes('\n')) return false;
+
+  // mailto 링크 지원
+  if (/^mailto:[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(trimmed)) return true;
+
+  // 프로토콜이 생략된 경우 https:// 추가하여 검사
+  const toTest = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  try {
+    const parsed = new URL(toTest);
+    if (!['http:', 'https:'].includes(parsed.protocol)) return false;
+    const hostname = parsed.hostname;
+    if (!hostname) return false;
+
+    // 로컬호스트 및 IPv4 허용
+    if (hostname === 'localhost' || /^127\.\d+\.\d+\.\d+$/.test(hostname)) return true;
+
+    // 도메인은 최소 1개의 점(.)과 2글자 이상의 영문 TLD를 포함해야 함 (예: google.com, velog.io, toss.co.kr)
+    const domainRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+    return domainRegex.test(hostname);
+  } catch {
+    return false;
+  }
+}
+
+// ==========================================
+// Zod 검증 스키마 정의
+// ==========================================
+const addLinkSchema = z
+  .object({
+    type: z.enum(['link', 'youtube', 'music']),
+    title: z
+      .string()
+      .trim()
+      .min(1, '링크 제목을 입력해주세요.')
+      .max(50, '링크 제목은 최대 50자까지 입력할 수 있어요.'),
+    url: z
+      .string()
+      .trim()
+      .min(1, '링크 URL을 입력해주세요.')
+      .refine(isValidUrl, {
+        message: '올바른 링크 주소(예: https://example.com 또는 naver.com)를 입력해주세요.',
+      }),
+    embedUrl: z.string().trim().optional(),
+    icon: z.string(),
+    isActive: z.boolean(),
+  })
+  .superRefine((data, ctx) => {
+    // YouTube 타입일 때 유튜브 도메인 형식 안내
+    if (data.type === 'youtube' && data.url && isValidUrl(data.url)) {
+      const isYt = /youtube\.com|youtu\.be/i.test(data.url);
+      if (!isYt) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: '유효한 YouTube 링크 주소(youtube.com 또는 youtu.be)를 입력해주세요.',
+          path: ['url'],
+        });
+      }
+    }
+  });
+
+type AddLinkFormValues = z.infer<typeof addLinkSchema>;
+
 export function AddLinkDialog({ open, onOpenChange, trigger }: AddLinkDialogProps) {
   const [internalOpen, setInternalOpen] = useState(false);
   const isControlled = open !== undefined;
   const isOpen = isControlled ? open : internalOpen;
   const setOpen = (value: boolean) => {
+    if (!value) {
+      reset();
+    }
     if (isControlled) {
       onOpenChange?.(value);
     } else {
@@ -102,98 +175,99 @@ export function AddLinkDialog({ open, onOpenChange, trigger }: AddLinkDialogProp
 
   const { addLink } = useMyLinkStore();
 
-  const [type, setType] = useState<LinkType>('link');
-  const [title, setTitle] = useState('');
-  const [url, setUrl] = useState('');
-  const [embedUrl, setEmbedUrl] = useState('');
-  const [selectedIcon, setSelectedIcon] = useState('Globe');
-  const [isActive, setIsActive] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    control,
+    formState: { errors, isSubmitting },
+  } = useForm<AddLinkFormValues>({
+    resolver: zodResolver(addLinkSchema),
+    defaultValues: {
+      type: 'link',
+      title: '',
+      url: '',
+      embedUrl: '',
+      icon: 'Globe',
+      isActive: true,
+    },
+    mode: 'onChange',
+  });
 
-  const resetForm = () => {
-    setType('link');
-    setTitle('');
-    setUrl('');
-    setEmbedUrl('');
-    setSelectedIcon('Globe');
-    setIsActive(true);
-    setError(null);
-  };
+  const currentType = watch('type');
+  const currentUrl = watch('url');
+  const selectedIcon = watch('icon');
+  const currentEmbedUrl = watch('embedUrl');
 
-  const handleUrlChange = (value: string) => {
-    setUrl(value);
-    setError(null);
+  const urlRegister = register('url');
+
+  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    urlRegister.onChange(e);
+    const val = e.target.value;
 
     // 자동 임베드 주소 추출
-    if (type === 'youtube') {
-      const yt = extractYoutubeEmbed(value);
-      if (yt) setEmbedUrl(yt);
-    } else if (type === 'music') {
-      const sp = extractSpotifyEmbed(value);
-      if (sp) setEmbedUrl(sp);
+    if (currentType === 'youtube') {
+      const yt = extractYoutubeEmbed(val);
+      if (yt) setValue('embedUrl', yt, { shouldValidate: true });
+    } else if (currentType === 'music') {
+      const sp = extractSpotifyEmbed(val);
+      if (sp) setValue('embedUrl', sp, { shouldValidate: true });
     }
   };
 
   const handleTypeChange = (newType: LinkType) => {
-    setType(newType);
-    setError(null);
+    setValue('type', newType, { shouldValidate: true });
 
     if (newType === 'youtube') {
-      setSelectedIcon('Youtube');
-      if (url) {
-        const yt = extractYoutubeEmbed(url);
-        if (yt) setEmbedUrl(yt);
+      setValue('icon', 'Youtube');
+      if (currentUrl) {
+        const yt = extractYoutubeEmbed(currentUrl);
+        if (yt) setValue('embedUrl', yt);
       }
     } else if (newType === 'music') {
-      setSelectedIcon('Music');
-      if (url) {
-        const sp = extractSpotifyEmbed(url);
-        if (sp) setEmbedUrl(sp);
+      setValue('icon', 'Music');
+      if (currentUrl) {
+        const sp = extractSpotifyEmbed(currentUrl);
+        if (sp) setValue('embedUrl', sp);
       }
     } else {
-      setSelectedIcon('Globe');
-      setEmbedUrl('');
+      setValue('icon', 'Globe');
+      setValue('embedUrl', '');
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!title.trim()) {
-      setError('링크 제목을 입력해주세요.');
-      return;
-    }
-
-    let finalUrl = url.trim();
-    if (!finalUrl) {
-      setError('링크 URL을 입력해주세요.');
-      return;
-    }
-
-    // http 또는 https 프로토콜 자동 보정
+  const onSubmit = (data: AddLinkFormValues) => {
+    let finalUrl = data.url.trim();
     if (!/^https?:\/\//i.test(finalUrl) && !/^mailto:/i.test(finalUrl)) {
       finalUrl = `https://${finalUrl}`;
     }
 
-    let finalEmbedUrl = embedUrl.trim() || undefined;
-    if (type === 'youtube' && !finalEmbedUrl) {
+    let finalEmbedUrl = data.embedUrl?.trim() || undefined;
+    if (data.type === 'youtube' && !finalEmbedUrl) {
       const extracted = extractYoutubeEmbed(finalUrl);
       if (extracted) finalEmbedUrl = extracted;
-    } else if (type === 'music' && !finalEmbedUrl) {
+    } else if (data.type === 'music' && !finalEmbedUrl) {
       const extracted = extractSpotifyEmbed(finalUrl);
       if (extracted) finalEmbedUrl = extracted;
     }
 
     addLink({
-      type,
-      title: title.trim(),
+      type: data.type,
+      title: data.title.trim(),
       url: finalUrl,
       embedUrl: finalEmbedUrl,
-      icon: selectedIcon,
-      isActive,
+      icon: data.icon,
+      isActive: data.isActive,
     });
 
-    resetForm();
+    reset();
+    setOpen(false);
+  };
+
+  const handleClose = () => {
+    reset();
     setOpen(false);
   };
 
@@ -225,14 +299,7 @@ export function AddLinkDialog({ open, onOpenChange, trigger }: AddLinkDialogProp
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4.5 pt-1">
-          {/* 에러 메시지 */}
-          {error && (
-            <div className="rounded-xl bg-red-50 px-3.5 py-2.5 text-xs font-semibold text-toss-red-500">
-              {error}
-            </div>
-          )}
-
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4.5 pt-1">
           {/* 링크 유형 선택 */}
           <div className="flex flex-col gap-2">
             <Label className="text-xs font-medium text-toss-grey-700">링크 유형</Label>
@@ -241,7 +308,7 @@ export function AddLinkDialog({ open, onOpenChange, trigger }: AddLinkDialogProp
                 type="button"
                 onClick={() => handleTypeChange('link')}
                 className={`flex items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-semibold transition-all ${
-                  type === 'link'
+                  currentType === 'link'
                     ? 'bg-white text-toss-grey-900 shadow-xs'
                     : 'text-toss-grey-700 hover:text-toss-grey-900'
                 }`}
@@ -253,7 +320,7 @@ export function AddLinkDialog({ open, onOpenChange, trigger }: AddLinkDialogProp
                 type="button"
                 onClick={() => handleTypeChange('youtube')}
                 className={`flex items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-semibold transition-all ${
-                  type === 'youtube'
+                  currentType === 'youtube'
                     ? 'bg-white text-toss-grey-900 shadow-xs'
                     : 'text-toss-grey-700 hover:text-toss-grey-900'
                 }`}
@@ -265,7 +332,7 @@ export function AddLinkDialog({ open, onOpenChange, trigger }: AddLinkDialogProp
                 type="button"
                 onClick={() => handleTypeChange('music')}
                 className={`flex items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-semibold transition-all ${
-                  type === 'music'
+                  currentType === 'music'
                     ? 'bg-white text-toss-grey-900 shadow-xs'
                     : 'text-toss-grey-700 hover:text-toss-grey-900'
                 }`}
@@ -284,19 +351,25 @@ export function AddLinkDialog({ open, onOpenChange, trigger }: AddLinkDialogProp
             <Input
               id="link-title"
               placeholder={
-                type === 'youtube'
+                currentType === 'youtube'
                   ? '예) YouTube'
-                  : type === 'music'
+                  : currentType === 'music'
                   ? '예) Spotify'
                   : '예) GitHub, Blog, Website 등'
               }
-              value={title}
-              onChange={(e) => {
-                setTitle(e.target.value);
-                setError(null);
-              }}
-              className="h-11 rounded-xl"
+              {...register('title')}
+              className={`h-11 rounded-xl transition-colors ${
+                errors.title
+                  ? 'border-toss-red-500 focus-visible:border-toss-red-500 focus-visible:ring-toss-red-500/20'
+                  : ''
+              }`}
             />
+            {errors.title && (
+              <div className="flex items-center gap-1 text-xs font-medium text-toss-red-500">
+                <AlertCircle className="size-3" />
+                <span>{errors.title.message}</span>
+              </div>
+            )}
           </div>
 
           {/* 링크 URL 입력 */}
@@ -308,20 +381,30 @@ export function AddLinkDialog({ open, onOpenChange, trigger }: AddLinkDialogProp
               id="link-url"
               type="text"
               placeholder={
-                type === 'youtube'
+                currentType === 'youtube'
                   ? 'https://www.youtube.com/watch?v=...'
-                  : type === 'music'
+                  : currentType === 'music'
                   ? 'https://open.spotify.com/playlist/...'
                   : 'https://example.com'
               }
-              value={url}
-              onChange={(e) => handleUrlChange(e.target.value)}
-              className="h-11 rounded-xl"
+              {...urlRegister}
+              onChange={handleUrlChange}
+              className={`h-11 rounded-xl transition-colors ${
+                errors.url
+                  ? 'border-toss-red-500 focus-visible:border-toss-red-500 focus-visible:ring-toss-red-500/20'
+                  : ''
+              }`}
             />
+            {errors.url && (
+              <div className="flex items-center gap-1 text-xs font-medium text-toss-red-500">
+                <AlertCircle className="size-3" />
+                <span>{errors.url.message}</span>
+              </div>
+            )}
           </div>
 
           {/* 미디어 임베드 URL (유튜브 or 음악 선택 시) */}
-          {(type === 'youtube' || type === 'music') && (
+          {(currentType === 'youtube' || currentType === 'music') && (
             <div className="flex flex-col gap-1.5 rounded-xl border border-toss-grey-200 bg-toss-grey-50 p-3">
               <div className="flex items-center justify-between">
                 <Label htmlFor="link-embed" className="text-xs font-medium text-toss-grey-700">
@@ -332,24 +415,24 @@ export function AddLinkDialog({ open, onOpenChange, trigger }: AddLinkDialogProp
               <Input
                 id="link-embed"
                 placeholder={
-                  type === 'youtube'
+                  currentType === 'youtube'
                     ? 'https://www.youtube.com/embed/...'
                     : 'https://open.spotify.com/embed/playlist/...'
                 }
-                value={embedUrl}
-                onChange={(e) => setEmbedUrl(e.target.value)}
+                value={currentEmbedUrl || ''}
+                {...register('embedUrl')}
                 className="h-10 bg-white text-xs"
               />
               <p className="text-[11px] text-toss-grey-400">
-                {type === 'youtube'
-                  ? '유튜브 주소를 입력하면 자동으로 임베드 플레이어가 연동돼요.'
+                {currentType === 'youtube'
+                  ? 'YouTube 영상 링크 입력 시 자동으로 플레이어가 연동돼요.'
                   : '스포티파이 등의 임베드 플레이어 링크를 지원해요.'}
               </p>
             </div>
           )}
 
           {/* 일반 링크 시 아이콘 선택 */}
-          {type === 'link' && (
+          {currentType === 'link' && (
             <div className="flex flex-col gap-2">
               <Label className="text-xs font-medium text-toss-grey-700">아이콘 선택</Label>
               <div className="flex flex-wrap gap-1.5">
@@ -360,7 +443,7 @@ export function AddLinkDialog({ open, onOpenChange, trigger }: AddLinkDialogProp
                     <button
                       key={item.id}
                       type="button"
-                      onClick={() => setSelectedIcon(item.id)}
+                      onClick={() => setValue('icon', item.id)}
                       className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs transition-all ${
                         isSelected
                           ? 'border-toss-blue-500 bg-toss-blue-50 font-semibold text-toss-blue-500 ring-1 ring-toss-blue-500'
@@ -384,24 +467,28 @@ export function AddLinkDialog({ open, onOpenChange, trigger }: AddLinkDialogProp
                 켜두면 프로필 목록에 즉시 노출돼요.
               </span>
             </div>
-            <Switch checked={isActive} onCheckedChange={setIsActive} />
+            <Controller
+              name="isActive"
+              control={control}
+              render={({ field }) => (
+                <Switch checked={field.value} onCheckedChange={field.onChange} />
+              )}
+            />
           </div>
 
           <DialogFooter className="mt-2 gap-2 sm:gap-2">
             <Button
               type="button"
               variant="outline"
-              onClick={() => {
-                resetForm();
-                setOpen(false);
-              }}
+              onClick={handleClose}
               className="h-11 flex-1 rounded-xl border-toss-grey-200 font-medium text-toss-grey-700 hover:bg-toss-grey-100"
             >
               취소
             </Button>
             <Button
               type="submit"
-              className="h-11 flex-1 rounded-xl bg-toss-blue-500 font-semibold text-white hover:bg-toss-blue-600 active:scale-[0.98] transition-all"
+              disabled={isSubmitting}
+              className="h-11 flex-1 rounded-xl bg-toss-blue-500 font-semibold text-white hover:bg-toss-blue-600 active:scale-[0.98] transition-all disabled:opacity-50"
             >
               링크 추가하기
             </Button>

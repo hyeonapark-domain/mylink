@@ -60,9 +60,9 @@ export function PublicProfileView() {
                   trigger={
                     <Button
                       variant="outline"
-                      className="h-13 w-full gap-2 rounded-[16px] border-2 border-dashed border-toss-blue-500/35 bg-toss-blue-50/40 text-[14px] font-semibold text-toss-blue-500 shadow-2xs hover:border-toss-blue-500 hover:bg-toss-blue-50 hover:shadow-xs active:scale-[0.985] transition-all"
+                      className="h-14 w-full gap-2 rounded-[16px] border-2 border-dashed border-toss-blue-500/35 bg-toss-blue-50/40 text-sm font-semibold text-toss-blue-500 shadow-2xs hover:border-toss-blue-500 hover:bg-toss-blue-50 hover:shadow-xs active:scale-[0.985] transition-all"
                     >
-                      <Plus className="size-4" />
+                      <Plus className="size-4 shrink-0" />
                       새 링크 추가하기
                     </Button>
                   }
