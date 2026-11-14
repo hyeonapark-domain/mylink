@@ -66,30 +66,12 @@ export async function addLinkToFirestore(link: LinkItem): Promise<void> {
  * Firestore의 links 컬렉션에서 모든 링크를 가져와 createAt(또는 createdAt) 기준 최신순(내림차순)으로 정렬하여 반환합니다.
  * 만약 Firestore가 비어있다면 initialLinks를 초기 등록(seed)하고 최신순으로 반환합니다.
  */
-export async function getLinksFromFirestore(): Promise<LinkItem[]> {
+export async function getLinksFromFirestore(): Promise<LinkItem[] | null> {
   try {
     const snapshot = await getDocs(collection(db, LINKS_COLLECTION));
 
     if (snapshot.empty) {
-      // 최초 실행 시 기본 링크들을 Firestore에 시딩 (시간차를 두어 순서 보장)
-      const seededLinks: LinkItem[] = [];
-      const baseTime = Date.now();
-
-      for (let i = 0; i < initialLinks.length; i++) {
-        const item = initialLinks[i];
-        // 과거 순서 유지를 위해 시간차 부여 (order가 낮을수록 더 최신이 되도록 설정)
-        const itemTime = new Date(baseTime - (item.order ?? i) * 60000).toISOString();
-        const itemWithTime: LinkItem = {
-          ...item,
-          createAt: itemTime,
-          createdAt: itemTime,
-        };
-        seededLinks.push(itemWithTime);
-        await addLinkToFirestore(itemWithTime).catch((err) => {
-          console.warn('[Firestore] Seeding item failed:', item.id, err);
-        });
-      }
-      return seededLinks;
+      return [];
     }
 
     const items = snapshot.docs.map((d) => {
@@ -121,7 +103,7 @@ export async function getLinksFromFirestore(): Promise<LinkItem[]> {
     return items.map((wrapper) => wrapper.item);
   } catch (error) {
     console.warn('[Firestore] getLinksFromFirestore failed:', error);
-    return initialLinks;
+    return null;
   }
 }
 

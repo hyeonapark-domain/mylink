@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import { Profile, LinkItem, ThemeConfig, AnalyticsData } from '@/types';
 import { initialProfile, initialLinks, initialTheme, initialAnalytics } from '@/data/mockData';
 import { addLinkToFirestore, getLinksFromFirestore } from '@/lib/firestore';
@@ -24,26 +25,28 @@ export interface MyLinkState {
   resetToDefault: () => void;
 }
 
-export const useMyLinkStore = create<MyLinkState>()((set) => ({
-  profile: initialProfile,
-  links: initialLinks,
-  theme: initialTheme,
-  analytics: initialAnalytics,
-  isLoadingLinks: false,
+export const useMyLinkStore = create<MyLinkState>()(
+  persist(
+    (set, get) => ({
+      profile: initialProfile,
+      links: initialLinks,
+      theme: initialTheme,
+      analytics: initialAnalytics,
+      isLoadingLinks: false,
 
-  fetchLinks: async () => {
-    set({ isLoadingLinks: true });
-    try {
-      const fetched = await getLinksFromFirestore();
-      if (fetched && fetched.length > 0) {
-        set({ links: fetched });
-      }
-    } catch (err) {
-      console.warn('[Firestore] 링크 불러오기 실패:', err);
-    } finally {
-      set({ isLoadingLinks: false });
-    }
-  },
+      fetchLinks: async () => {
+        set({ isLoadingLinks: true });
+        try {
+          const fetched = await getLinksFromFirestore();
+          if (fetched && fetched.length > 0) {
+            set({ links: fetched });
+          }
+        } catch (err) {
+          console.warn('[Firestore] 링크 불러오기 실패:', err);
+        } finally {
+          set({ isLoadingLinks: false });
+        }
+      },
 
   setLinks: (links) => set(() => ({ links })),
 
@@ -65,7 +68,7 @@ export const useMyLinkStore = create<MyLinkState>()((set) => ({
     };
 
     // 1) 로컬 상태를 즉시 업데이트 (최신순이므로 맨 앞에 추가)
-    useMyLinkStore.setState((state) => ({
+    set((state) => ({
       links: [linkItem, ...state.links],
     }));
 
@@ -74,7 +77,7 @@ export const useMyLinkStore = create<MyLinkState>()((set) => ({
       await addLinkToFirestore(linkItem);
       const refreshedLinks = await getLinksFromFirestore();
       if (refreshedLinks && refreshedLinks.length > 0) {
-        useMyLinkStore.setState({ links: refreshedLinks });
+        set({ links: refreshedLinks });
       }
     } catch (err) {
       console.warn('[Firestore] 링크 저장 및 갱신 실패:', err);
@@ -168,5 +171,18 @@ export const useMyLinkStore = create<MyLinkState>()((set) => ({
       theme: initialTheme,
       analytics: initialAnalytics,
     })),
-}));
+    }),
+    {
+      name: 'mylink-storage',
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        links: state.links,
+        profile: state.profile,
+        theme: state.theme,
+        analytics: state.analytics,
+      }),
+    }
+  )
+);
+
 
