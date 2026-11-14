@@ -1,15 +1,19 @@
 import { create } from 'zustand';
 import { Profile, LinkItem, ThemeConfig, AnalyticsData } from '@/types';
 import { initialProfile, initialLinks, initialTheme, initialAnalytics } from '@/data/mockData';
+import { addLinkToFirestore, getLinksFromFirestore } from '@/lib/firestore';
 
 export interface MyLinkState {
   profile: Profile;
   links: LinkItem[];
   theme: ThemeConfig;
   analytics: AnalyticsData;
+  isLoadingLinks: boolean;
 
+  fetchLinks: () => Promise<void>;
+  setLinks: (links: LinkItem[]) => void;
   updateProfile: (profile: Partial<Profile>) => void;
-  addLink: (link: Omit<LinkItem, 'id' | 'clickCount' | 'order'>) => void;
+  addLink: (link: Omit<LinkItem, 'id' | 'clickCount' | 'order'>) => Promise<void>;
   updateLink: (id: string, link: Partial<LinkItem>) => void;
   deleteLink: (id: string) => void;
   reorderLinks: (links: LinkItem[]) => void;
@@ -25,24 +29,57 @@ export const useMyLinkStore = create<MyLinkState>()((set) => ({
   links: initialLinks,
   theme: initialTheme,
   analytics: initialAnalytics,
+  isLoadingLinks: false,
+
+  fetchLinks: async () => {
+    set({ isLoadingLinks: true });
+    try {
+      const fetched = await getLinksFromFirestore();
+      if (fetched && fetched.length > 0) {
+        set({ links: fetched });
+      }
+    } catch (err) {
+      console.warn('[Firestore] 링크 불러오기 실패:', err);
+    } finally {
+      set({ isLoadingLinks: false });
+    }
+  },
+
+  setLinks: (links) => set(() => ({ links })),
 
   updateProfile: (updatedProfile) =>
     set((state) => ({
       profile: { ...state.profile, ...updatedProfile },
     })),
 
-  addLink: (newLink) =>
-    set((state) => {
-      const id = `link-${Date.now()}`;
-      const order = state.links.length;
-      const linkItem: LinkItem = {
-        ...newLink,
-        id,
-        clickCount: 0,
-        order,
-      };
-      return { links: [...state.links, linkItem] };
-    }),
+  addLink: async (newLink) => {
+    const id = `link-${Date.now()}`;
+    const nowIso = new Date().toISOString();
+    const linkItem: LinkItem = {
+      ...newLink,
+      id,
+      clickCount: 0,
+      order: 0,
+      createAt: nowIso,
+      createdAt: nowIso,
+    };
+
+    // 1) 로컬 상태를 즉시 업데이트 (최신순이므로 맨 앞에 추가)
+    useMyLinkStore.setState((state) => ({
+      links: [linkItem, ...state.links],
+    }));
+
+    // 2) Firestore에 비동기 저장 및 최신 목록 재동기화
+    try {
+      await addLinkToFirestore(linkItem);
+      const refreshedLinks = await getLinksFromFirestore();
+      if (refreshedLinks && refreshedLinks.length > 0) {
+        useMyLinkStore.setState({ links: refreshedLinks });
+      }
+    } catch (err) {
+      console.warn('[Firestore] 링크 저장 및 갱신 실패:', err);
+    }
+  },
 
   updateLink: (id, updatedFields) =>
     set((state) => ({

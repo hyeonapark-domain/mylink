@@ -23,6 +23,8 @@ export interface LinkItem {
   isActive: boolean;
   order: number;
   clickCount: number;
+  createAt?: string;
+  createdAt?: string;
 }
 
 export interface ThemeConfig {

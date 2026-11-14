@@ -11,12 +11,15 @@ import { Plus } from 'lucide-react';
 
 export function PublicProfileView() {
   const [mounted, setMounted] = useState(false);
-  const { profile, links, theme, analytics, recordView, recordClick } =
+  const { profile, links, theme, analytics, recordView, recordClick, fetchLinks } =
     useMyLinkStore();
 
   useEffect(() => {
     setMounted(true);
     recordView();
+
+    // 페이지 로드 시 Firebase에서 링크 목록 불러오기
+    fetchLinks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -29,9 +32,23 @@ export function PublicProfileView() {
     );
   }
 
+  // createAt / createdAt 기준 최신순 (내림차순) 정렬
   const activeLinks = [...links]
     .filter((l) => l.isActive)
-    .sort((a, b) => a.order - b.order);
+    .sort((a, b) => {
+      const timeA = a.createAt
+        ? new Date(a.createAt).getTime()
+        : a.createdAt
+        ? new Date(a.createdAt).getTime()
+        : 0;
+      const timeB = b.createAt
+        ? new Date(b.createAt).getTime()
+        : b.createdAt
+        ? new Date(b.createdAt).getTime()
+        : 0;
+      if (timeB !== timeA) return timeB - timeA;
+      return (a.order ?? 0) - (b.order ?? 0);
+    });
 
   return (
     /* 전체 배경 — 데스크톱에서 중앙 배치 */

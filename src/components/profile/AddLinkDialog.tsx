@@ -109,10 +109,14 @@ function isValidUrl(val: string): boolean {
     const hostname = parsed.hostname;
     if (!hostname) return false;
 
-    // 로컬호스트 및 IPv4 허용
-    if (hostname === 'localhost' || /^127\.\d+\.\d+\.\d+$/.test(hostname)) return true;
+    // 로컬호스트 (포트 포함) 및 IPv4 허용
+    if (
+      hostname === 'localhost' ||
+      /^127\.\d+\.\d+\.\d+$/.test(hostname) ||
+      /^192\.168\.\d+\.\d+$/.test(hostname)
+    ) return true;
 
-    // 도메인은 최소 1개의 점(.)과 2글자 이상의 영문 TLD를 포함해야 함 (예: google.com, velog.io, toss.co.kr)
+    // 도메인은 최소 1개의 점(.)과 2글자 이상의 영문 TLD를 포함해야 함
     const domainRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
     return domainRegex.test(hostname);
   } catch {
@@ -238,7 +242,7 @@ export function AddLinkDialog({ open, onOpenChange, trigger }: AddLinkDialogProp
     }
   };
 
-  const onSubmit = (data: AddLinkFormValues) => {
+  const onSubmit = async (data: AddLinkFormValues) => {
     let finalUrl = data.url.trim();
     if (!/^https?:\/\//i.test(finalUrl) && !/^mailto:/i.test(finalUrl)) {
       finalUrl = `https://${finalUrl}`;
@@ -253,7 +257,7 @@ export function AddLinkDialog({ open, onOpenChange, trigger }: AddLinkDialogProp
       if (extracted) finalEmbedUrl = extracted;
     }
 
-    addLink({
+    await addLink({
       type: data.type,
       title: data.title.trim(),
       url: finalUrl,
